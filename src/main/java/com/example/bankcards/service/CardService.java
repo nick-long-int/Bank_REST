@@ -3,6 +3,7 @@ package com.example.bankcards.service;
 import com.example.bankcards.dto.CardDto;
 import com.example.bankcards.dto.UpdateCardDto;
 import com.example.bankcards.entity.card.Card;
+import com.example.bankcards.entity.card.CardStatus;
 import com.example.bankcards.entity.user.User;
 import com.example.bankcards.exception.CardNumberValidationException;
 import com.example.bankcards.exception.DataValidationException;
@@ -12,6 +13,7 @@ import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.util.DataValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 @Service
 @RequiredArgsConstructor
@@ -99,5 +102,9 @@ public class CardService {
         return cardMapper.cardToCardDto(cardToUpdate);
     }
 
-    //todo написать тесты для метода, добавить sql script, разные окружения сделать, протестить в постмане
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void blockExpiredCards(){
+        cardRepository.updateStatusForExpiredCards(LocalDate.now(), CardStatus.EXPIRED);
+    }
 }
