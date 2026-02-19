@@ -1,9 +1,11 @@
 package com.example.bankcards.service;
 
 import com.example.bankcards.dto.CardDto;
+import com.example.bankcards.dto.UpdateCardDto;
 import com.example.bankcards.entity.card.Card;
 import com.example.bankcards.entity.user.User;
 import com.example.bankcards.exception.CardNumberValidationException;
+import com.example.bankcards.exception.DataValidationException;
 import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.mapper.CardMapper;
 import com.example.bankcards.repository.CardRepository;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +59,7 @@ public class CardService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public CardDto getCardById(Long id) {
         Optional<Card> card = cardRepository.findById(id);
         if (card.isEmpty()) {
@@ -64,12 +68,35 @@ public class CardService {
         return cardMapper.cardToCardDto(card.get());
     }
 
+    @Transactional(
+        propagation = Propagation.REQUIRED,
+        isolation = Isolation.READ_COMMITTED
+    )
     public void deleteCardById(Long id) {
         Optional<Card> card = cardRepository.findById(id);
         if (card.isEmpty()) {
             throw new NotFoundException("Card not found");
         }
         cardRepository.delete(card.get());
+    }
+
+    @Transactional(
+        propagation = Propagation.REQUIRED,
+        isolation = Isolation.READ_COMMITTED
+    )
+    public CardDto updateCard(Long id, UpdateCardDto cardDto) {
+        Optional<Card> card = cardRepository.findById(id);
+
+        if (card.isEmpty()) {
+            throw new NotFoundException("Card not found");
+        }
+        if (cardDto.getExpiryDate().isBefore(LocalDate.now())) {
+            throw new DataValidationException("Expire date must be after current date");
+        }
+
+        Card cardToUpdate = card.get();
+        cardMapper.updateCard(cardDto, cardToUpdate);
+        return cardMapper.cardToCardDto(cardToUpdate);
     }
 
     //todo написать тесты для метода, добавить sql script, разные окружения сделать, протестить в постмане

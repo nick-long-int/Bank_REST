@@ -1,6 +1,7 @@
 package com.example.bankcards.service;
 
 import com.example.bankcards.dto.CardDto;
+import com.example.bankcards.dto.UpdateCardDto;
 import com.example.bankcards.entity.card.Card;
 import com.example.bankcards.entity.user.User;
 import com.example.bankcards.exception.CardNumberValidationException;
@@ -137,6 +138,27 @@ class CardServiceTest {
         verify(cardRepository, times(1)).delete(card);
     }
 
+    @Test
+    @DisplayName("Обновление данных карты")
+    void testUpdateCard(){
+        UpdateCardDto updateCardDto = new UpdateCardDto();
+        updateCardDto.setExpiryDate(LocalDate.MAX);
+        updateCardDto.setStatus("BLOCKED");
+
+        Card card = new Card();
+        card.setId(1L);
+        card.setExpiryDate(LocalDate.now());
+
+        when(cardRepository.findById(anyLong())).thenReturn(Optional.of(card));
+
+        CardDto cardDto = cardService.updateCard(1L, updateCardDto);
+
+        assertEquals(1L, cardDto.getId());
+        assertEquals("BLOCKED", cardDto.getStatus());
+        assertEquals(LocalDate.MAX, cardDto.getExpiryDate());
+
+    }
+
     //Negative tests
 
     @Test
@@ -218,11 +240,33 @@ class CardServiceTest {
     }
 
     @Test
+    @DisplayName("Удаление карты с несуществующим ID")
     void testDeleteCardWithIdWhichNotExist(){
         when(cardRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> cardService.deleteCardById(1L));
     }
 
+
+    @Test
+    @DisplayName("Обновление карты с несуществующим ID")
+    void testUpdateCardWithIdWhichNotExist(){
+        when(cardRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class,
+            () -> cardService.updateCard(1L, new UpdateCardDto()));
+    }
+
+    @Test
+    @DisplayName("Обновление карты с сроком годности до текущей даты")
+    void testUpdateCardWithExpiryDateBeforeNow(){
+        UpdateCardDto updateCardDto = new UpdateCardDto();
+        updateCardDto.setExpiryDate(LocalDate.now().minusDays(1));
+
+        when(cardRepository.findById(anyLong())).thenReturn(Optional.of(new Card()));
+
+        assertThrows(DataValidationException.class,
+            () -> cardService.updateCard(1L, updateCardDto));
+    }
 
 }
