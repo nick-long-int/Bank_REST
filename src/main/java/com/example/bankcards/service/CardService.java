@@ -64,5 +64,13 @@ public class CardService {
         return cardMapper.cardToCardDto(card.get());
     }
 
+    public void deleteCardById(Long id) {
+        Optional<Card> card = cardRepository.findById(id);
+        if (card.isEmpty()) {
+            throw new NotFoundException("Card not found");
+        }
+        cardRepository.delete(card.get());
+    }
+
     //todo написать тесты для метода, добавить sql script, разные окружения сделать, протестить в постмане
 }

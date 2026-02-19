@@ -6,6 +6,7 @@ import com.example.bankcards.util.DataValidator;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,12 @@ public class CardController {
     public CardDto getCardById(@PathVariable Long id) {
         validator.objectIsNotNull(id, "id must not be null");
         return cardService.getCardById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCardById(@PathVariable Long id) {
+        validator.objectIsNotNull(id, "id must not be null");
+        cardService.deleteCardById(id);
     }
 
 }
