@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CardServiceTest {
+class CardServiceAddTest {
 
     @Mock
     private CardRepository cardRepository;

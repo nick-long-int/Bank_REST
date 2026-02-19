@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,6 +46,22 @@ public class CardService {
         Card card = cardMapper.cardDtoToCard(cardDto);
         card.setUser(user.get());
         return cardMapper.cardToCardDto(cardRepository.save(card));
+    }
+
+    @Transactional(readOnly = true)
+    public List<CardDto> getAllCards() {
+        return cardRepository.findAll()
+            .stream()
+            .map(cardMapper::cardToCardDto)
+            .toList();
+    }
+
+    public CardDto getCardById(Long id) {
+        Optional<Card> card = cardRepository.findById(id);
+        if (card.isEmpty()) {
+            throw new NotFoundException("Card not found");
+        }
+        return cardMapper.cardToCardDto(card.get());
     }
 
     //todo написать тесты для метода, добавить sql script, разные окружения сделать, протестить в постмане
