@@ -23,3 +23,6 @@ spring:
     enabled: true
     change-log: classpath:db/migration/db.changelog-master.yaml
 
+key:
+  private: keys/private.pem
+  public: keys/public.pem

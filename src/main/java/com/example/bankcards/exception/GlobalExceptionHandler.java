@@ -3,6 +3,7 @@ package com.example.bankcards.exception;
 import com.example.bankcards.exception.dto.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,6 +55,17 @@ public class GlobalExceptionHandler {
             .message(ex.getMessage())
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.FORBIDDEN.value())
+            .build();
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        log.error(ex.getMessage(), ex);
+        return ExceptionResponse.builder()
+            .message(ex.getMessage())
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND.value())
             .build();
     }
 
