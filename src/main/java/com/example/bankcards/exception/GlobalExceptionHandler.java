@@ -46,6 +46,17 @@ public class GlobalExceptionHandler {
             .build();
     }
 
+    @ExceptionHandler(InsufficientFundsException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionResponse handleInsufficientFundsException(InsufficientFundsException ex) {
+        log.error(ex.getMessage(), ex);
+        return ExceptionResponse.builder()
+            .message(ex.getMessage())
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.FORBIDDEN.value())
+            .build();
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse handleRuntimeException(RuntimeException e) {
