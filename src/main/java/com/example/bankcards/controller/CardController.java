@@ -53,6 +53,7 @@ public class CardController {
         cardService.deleteCardById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public CardDto updateCardById(@PathVariable Long id, @RequestBody UpdateCardDto cardDto) {
         validator.objectIsNotNull(id, "id must not be null");
