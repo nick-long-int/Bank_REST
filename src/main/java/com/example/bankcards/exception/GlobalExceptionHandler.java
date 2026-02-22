@@ -69,6 +69,17 @@ public class GlobalExceptionHandler {
             .build();
     }
 
+    @ExceptionHandler(MissingAuthHeaderException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionResponse handleMissingAuthHeaderException(MissingAuthHeaderException ex) {
+        log.error(ex.getMessage(), ex);
+        return ExceptionResponse.builder()
+            .message(ex.getMessage())
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .timestamp(LocalDateTime.now())
+            .build();
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse handleRuntimeException(RuntimeException e) {

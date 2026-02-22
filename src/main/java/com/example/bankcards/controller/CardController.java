@@ -7,6 +7,7 @@ import com.example.bankcards.util.DataValidator;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ public class CardController {
     private final CardService cardService;
     private final DataValidator validator;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public CardDto createCard(@RequestBody CardDto cardDto, HttpServletResponse response) {
         validator.objectIsNotNull(cardDto, "cardDto must not be null");
@@ -33,6 +35,7 @@ public class CardController {
         return cardService.createCard(cardDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<CardDto> getAllCards() {
         return cardService.getAllCards();
@@ -44,6 +47,7 @@ public class CardController {
         return cardService.getCardById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteCardById(@PathVariable Long id) {
         validator.objectIsNotNull(id, "id must not be null");

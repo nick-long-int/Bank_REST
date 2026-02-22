@@ -7,7 +7,6 @@ import com.example.bankcards.entity.user.UserRole;
 import com.example.bankcards.exception.DataValidationException;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.util.JwtProducer;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,5 +39,12 @@ public class AuthService {
         User savedUser = userRepository.save(user);
         return new ResponseUserDto(savedUser.getId(), savedUser.getUsername(), jwtProducer.createToken(savedUser));
 
+    }
+
+    public ResponseUserDto login(User user) {
+        ResponseUserDto responseUserDto = new ResponseUserDto();
+        responseUserDto.setUsername(user.getUsername());
+        responseUserDto.setAccessToken(jwtProducer.createToken(user));
+        return responseUserDto;
     }
 }
