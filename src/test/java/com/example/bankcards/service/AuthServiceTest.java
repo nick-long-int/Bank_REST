@@ -5,7 +5,7 @@ import com.example.bankcards.dto.ResponseUserDto;
 import com.example.bankcards.entity.user.User;
 import com.example.bankcards.exception.DataValidationException;
 import com.example.bankcards.repository.UserRepository;
-import com.example.bankcards.util.JwtProducer;
+import com.example.bankcards.security.jwt.JwtProducer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

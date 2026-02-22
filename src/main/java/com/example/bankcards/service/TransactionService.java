@@ -30,7 +30,7 @@ public class TransactionService {
     )
     public TransactionDto runTransaction(TransactionDto transactionDto) {
         Card cardFrom = cardRepository.findByNumber(transactionDto.getCardNumberFrom())
-            .orElseThrow(()-> new NotFoundException("Card not found"));
+            .orElseThrow(() -> new NotFoundException("Card not found"));
         Card cardTo = cardRepository.findByNumber(transactionDto.getCardNumberTo())
             .orElseThrow(() -> new NotFoundException("Card not found"));
 

@@ -54,7 +54,7 @@ public class KeyConfiguration {
         }
     }
 
-    private String readKeyFromFile(String pathFile){
+    private String readKeyFromFile(String pathFile) {
         ClassPathResource resource = new ClassPathResource(pathFile);
         try (InputStream inputStream = resource.getInputStream()) {
 

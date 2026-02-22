@@ -6,7 +6,7 @@ import com.example.bankcards.entity.user.User;
 import com.example.bankcards.entity.user.UserRole;
 import com.example.bankcards.exception.DataValidationException;
 import com.example.bankcards.repository.UserRepository;
-import com.example.bankcards.util.JwtProducer;
+import com.example.bankcards.security.jwt.JwtProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

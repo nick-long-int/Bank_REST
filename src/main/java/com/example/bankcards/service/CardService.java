@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
 
 @Service
 @RequiredArgsConstructor
@@ -104,7 +103,7 @@ public class CardService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
-    public void blockExpiredCards(){
+    public void blockExpiredCards() {
         cardRepository.updateStatusForExpiredCards(LocalDate.now(), CardStatus.EXPIRED);
     }
 }

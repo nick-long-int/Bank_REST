@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UpdateCardDto{
+public class UpdateCardDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     protected LocalDate expiryDate;
     protected String status;

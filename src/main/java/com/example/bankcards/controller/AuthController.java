@@ -35,7 +35,7 @@ public class AuthController {
         Authentication auth = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(requestUserDto.getUsername(), requestUserDto.getPassword())
         );
-        if (auth.isAuthenticated()){
+        if (auth.isAuthenticated()) {
             User user = (User) auth.getPrincipal();
             return authService.login(user);
         }

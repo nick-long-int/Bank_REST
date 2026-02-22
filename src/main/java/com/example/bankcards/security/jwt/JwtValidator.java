@@ -1,4 +1,4 @@
-package com.example.bankcards.util;
+package com.example.bankcards.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

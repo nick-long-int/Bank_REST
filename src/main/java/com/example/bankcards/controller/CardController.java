@@ -4,7 +4,6 @@ import com.example.bankcards.dto.CardDto;
 import com.example.bankcards.dto.UpdateCardDto;
 import com.example.bankcards.service.CardService;
 import com.example.bankcards.util.DataValidator;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

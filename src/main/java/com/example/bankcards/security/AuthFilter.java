@@ -1,7 +1,6 @@
-package com.example.bankcards.filter;
+package com.example.bankcards.security;
 
-import com.example.bankcards.service.CustomUserDetailsService;
-import com.example.bankcards.util.JwtValidator;
+import com.example.bankcards.security.jwt.JwtValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +44,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 String username = jwtValidator.extractUsername(token);
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails user = customUserDetailsService.loadUserByUsername(username);
-                    
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         user, null, user.getAuthorities()
                     );
