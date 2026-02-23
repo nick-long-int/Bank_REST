@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class CardNumberMask {
 
     public String hideNumber(String number) {
-        return "**** **** **** " + number.substring(11, 15);
+        return "**** **** **** " + number.substring(12, 16);
     }
 
 }

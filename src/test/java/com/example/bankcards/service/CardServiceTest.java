@@ -10,6 +10,7 @@ import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.mapper.CardMapperImpl;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
+import com.example.bankcards.util.CardNumberMask;
 import com.example.bankcards.util.DataValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +50,9 @@ class CardServiceTest {
 
     @Spy
     private DataValidator validator;
+
+    @Spy
+    private CardNumberMask mask;
 
     @InjectMocks
     private CardService cardService;
@@ -97,6 +101,8 @@ class CardServiceTest {
             new Card(),
             new Card());
 
+        cards.forEach(card -> card.setNumber("123456789876543"));
+
         when(cardRepository.findAll()).thenReturn(cards);
 
         List<CardDto> cardDtos = cardService.getAllCards();
@@ -109,7 +115,7 @@ class CardServiceTest {
     void testGetCardById(){
         Card card = new Card();
         card.setId(1L);
-        card.setNumber("1234_5678_9876_5432");
+        card.setNumber("1234567898765432");
 
         User user = new User();
         user.setId(1L);
@@ -121,7 +127,7 @@ class CardServiceTest {
         CardDto cardDto = cardService.getCardById(1L);
         assertNotNull(cardDto);
         assertEquals(1L, cardDto.getId());
-        assertEquals("1234_5678_9876_5432", cardDto.getNumber());
+        assertEquals("**** **** **** 5432", cardDto.getNumber());
         assertEquals(1L, cardDto.getUserId());
     }
 
@@ -148,6 +154,7 @@ class CardServiceTest {
         Card card = new Card();
         card.setId(1L);
         card.setExpiryDate(LocalDate.now());
+        card.setNumber("1234567898765432");
 
         when(cardRepository.findById(anyLong())).thenReturn(Optional.of(card));
 
@@ -156,6 +163,7 @@ class CardServiceTest {
         assertEquals(1L, cardDto.getId());
         assertEquals("BLOCKED", cardDto.getStatus());
         assertEquals(LocalDate.MAX, cardDto.getExpiryDate());
+        assertEquals("**** **** **** 5432", cardDto.getNumber());
 
     }
 
