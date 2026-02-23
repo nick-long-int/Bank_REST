@@ -11,6 +11,7 @@ import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.mapper.CardMapper;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
+import com.example.bankcards.util.CardNumberMask;
 import com.example.bankcards.util.DataValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +32,7 @@ public class CardService {
     private final UserRepository userRepository;
     private final CardMapper cardMapper;
     private final DataValidator validator;
+    private final CardNumberMask mask;
 
     @Transactional(
         propagation = Propagation.REQUIRED,
@@ -50,14 +52,14 @@ public class CardService {
 
         Card card = cardMapper.cardDtoToCard(cardDto);
         card.setUser(user.get());
-        return cardMapper.cardToCardDto(cardRepository.save(card));
+        return applyMask(cardMapper.cardToCardDto(cardRepository.save(card)));
     }
 
     @Transactional(readOnly = true)
     public List<CardDto> getAllCards() {
         return cardRepository.findAll()
             .stream()
-            .map(cardMapper::cardToCardDto)
+            .map(card -> applyMask(cardMapper.cardToCardDto(card)))
             .toList();
     }
 
@@ -67,7 +69,8 @@ public class CardService {
         if (card.isEmpty()) {
             throw new NotFoundException("Card not found");
         }
-        return cardMapper.cardToCardDto(card.get());
+
+        return applyMask(cardMapper.cardToCardDto(card.get()));
     }
 
     @Transactional(
@@ -98,12 +101,17 @@ public class CardService {
 
         Card cardToUpdate = card.get();
         cardMapper.updateCard(cardDto, cardToUpdate);
-        return cardMapper.cardToCardDto(cardToUpdate);
+        return applyMask(cardMapper.cardToCardDto(cardToUpdate));
     }
 
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     public void blockExpiredCards() {
         cardRepository.updateStatusForExpiredCards(LocalDate.now(), CardStatus.EXPIRED);
+    }
+
+    private CardDto applyMask(CardDto cardDto) {
+        cardDto.setNumber(mask.hideNumber(cardDto.getNumber()));
+        return cardDto;
     }
 }
