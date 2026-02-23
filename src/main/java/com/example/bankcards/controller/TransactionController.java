@@ -3,6 +3,7 @@ package com.example.bankcards.controller;
 import com.example.bankcards.dto.TransactionDto;
 import com.example.bankcards.service.TransactionService;
 import com.example.bankcards.util.DataValidator;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class TransactionController {
     private final TransactionService transactionService;
     private final DataValidator validator;

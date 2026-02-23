@@ -23,6 +23,16 @@ spring:
     enabled: true
     change-log: classpath:db/migration/db.changelog-master.yaml
 
+
 key:
   private: keys/private.pem
   public: keys/public.pem
+springdoc:
+  api-docs:
+    path: /docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.springframework.security: DEBUG

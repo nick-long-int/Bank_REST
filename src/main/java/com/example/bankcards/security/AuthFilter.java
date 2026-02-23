@@ -23,6 +23,14 @@ public class AuthFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/swagger-ui") ||
+            path.startsWith("/docs") ||
+            path.startsWith("/api/v1/auth");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest req,
                                     HttpServletResponse res,
                                     FilterChain filterChain) throws ServletException, IOException {

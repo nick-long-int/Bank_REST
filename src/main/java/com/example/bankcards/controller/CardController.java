@@ -4,6 +4,7 @@ import com.example.bankcards.dto.CardDto;
 import com.example.bankcards.dto.UpdateCardDto;
 import com.example.bankcards.service.CardService;
 import com.example.bankcards.util.DataValidator;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/cards")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class CardController {
 
     private final CardService cardService;
